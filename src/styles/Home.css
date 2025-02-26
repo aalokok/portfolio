@@ -1,0 +1,310 @@
+/* Grayscale Design System - Home Styles */
+:root {
+  /* These are already defined in App.css, adding here for reference */
+  --grid-unit: 8px;
+  --space-sm: calc(var(--grid-unit) * 3);
+  --space-md: calc(var(--grid-unit) * 5);
+  --space-lg: calc(var(--grid-unit) * 8);
+  --space-xl: calc(var(--grid-unit) * 13);
+  
+  --font-display: 'Space Grotesk', 'Archivo', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  color: var(--color-light);
+  background-color: var(--color-dark);
+  overflow-x: hidden;
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+}
+
+.liquid-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(to bottom, var(--color-darker), var(--color-dark) 85%);
+  opacity: 1;
+  transition: background var(--transition-slow);
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-md);
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Hero Section - Centered Light Art */
+.hero-section {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-lg) 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-md);
+  position: relative;
+}
+
+.hero-title {
+  grid-column: 1 / 10;
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 0;
+  background: linear-gradient(110deg, 
+    var(--color-gray-100) 10%, 
+    var(--color-gray-200) 25%, 
+    var(--color-gray-300) 50%, 
+    var(--color-gray-100) 75%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 12s linear infinite;
+  transition: background var(--transition-slow);
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.accent-bar {
+  position: absolute;
+  width: 40%;
+  height: 6px;
+  background: linear-gradient(90deg, 
+    var(--color-gray-400), 
+    var(--color-gray-600)
+  );
+  bottom: -20px;
+  left: 4px;
+  transform: skewX(-20deg);
+  opacity: 0.8;
+  transition: background var(--transition-slow);
+}
+
+.hero-statement {
+  grid-column: 6 / 12;
+  align-self: end;
+  margin-top: var(--space-lg);
+}
+
+.subheadline {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-300);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+  transition: color var(--transition-slow);
+}
+
+.body-text {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  font-weight: 300;
+  color: var(--color-gray-200);
+  max-width: 40ch;
+  transition: color var(--transition-slow);
+}
+
+/* Work Section Styling */
+.work-section {
+  margin-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-md);
+}
+
+.work-module {
+  position: relative;
+  aspect-ratio: 5/4;
+  background: var(--color-gray-800);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--color-gray-700);
+  border-radius: 2px;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+[data-theme='light'] .work-module {
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+}
+
+.work-module:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-gray-500);
+  background: var(--color-gray-700);
+}
+
+[data-theme='light'] .work-module:hover {
+  border-color: var(--color-gray-400);
+  background: var(--color-gray-200);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.work-module::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.03) 0%, 
+    rgba(255, 255, 255, 0) 50%);
+  z-index: -1;
+}
+
+[data-theme='light'] .work-module::before {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.03) 0%, 
+    rgba(0, 0, 0, 0) 50%);
+}
+
+.work-number {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-light);
+  position: relative;
+  z-index: 2;
+  mix-blend-mode: difference;
+  transition: color var(--transition-slow);
+}
+
+.work-sigil {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  width: 60px;
+  height: 60px;
+  background: conic-gradient(
+    from 215deg,
+    var(--color-gray-400) 0%,
+    var(--color-gray-500) 25%,
+    var(--color-gray-300) 50%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  opacity: 0.5;
+  filter: blur(2px);
+  transform: rotate(0deg);
+  transition: all 0.8s ease, background var(--transition-slow);
+}
+
+.work-module:hover .work-sigil {
+  transform: rotate(45deg) scale(1.2);
+  opacity: 0.7;
+  filter: blur(1.5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .hero-title, .hero-statement {
+    grid-column: 1 / -1;
+  }
+
+  .hero-title {
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-statement {
+    margin-top: 0;
+  }
+
+  .content-wrapper {
+    padding: var(--space-sm);
+  }
+  
+  .hero-section {
+    min-height: 80vh;
+  }
+
+  .accent-bar {
+    width: 40%;
+  }
+}
+
+/* Custom scroll styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, 
+    var(--color-gray-500), 
+    var(--color-gray-600)
+  );
+  border-radius: 4px;
+  transition: background var(--transition-slow);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+/* Transitions disabled for reduced motion */
+@media (prefers-reduced-motion) {
+  .headline {
+    animation: none;
+  }
+  
+  .home-container,
+  .liquid-canvas,
+  .headline,
+  .accent-bar,
+  .subheadline,
+  .body-text,
+  .work-module,
+  .work-number,
+  .work-sigil,
+  ::-webkit-scrollbar-thumb {
+    transition: none !important;
+  }
+} 
