@@ -29,6 +29,15 @@ import '../styles/Projects.css';
 
 // Import local project images
 import bhag1 from '../assets/projects/bhag/bhag-1.png';
+import bhag2 from '../assets/projects/bhag/bhag-2.png';
+import bhag3 from '../assets/projects/bhag/bhag-3.png';
+import bhag4 from '../assets/projects/bhag/bhag-4.png';
+
+// Import arkiv project images
+import arkiv1 from '../assets/projects/arkiv/arkiv-1.png';
+import arkiv2 from '../assets/projects/arkiv/arkiv-2.png';
+import arkiv3 from '../assets/projects/arkiv/arkiv-3.png';
+import arkiv4 from '../assets/projects/arkiv/arkiv-4.png';
 
 // Define project structure
 interface Project {
@@ -74,9 +83,10 @@ const Projects: React.FC = () => {
       The platform was built using React for the frontend, Node.js and Express for the backend, and MongoDB for data storage. The interactive map visualization was implemented using Mapbox GL.`,
       tags: ['React', 'Node.js', 'MongoDB', 'Mapbox GL', 'RESTful API', 'Cloudinary', 'Full-Stack'],
       images: [
-        'https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=2070',
-        'https://images.unsplash.com/photo-1647599686733-0353f4297358?q=80&w=2070',
-        'https://images.unsplash.com/photo-1543964198-d54e4f2e24c4?q=80&w=2070'
+        arkiv1,
+        arkiv2,
+        arkiv3,
+        arkiv4
       ]
     },
     {
@@ -119,9 +129,10 @@ const Projects: React.FC = () => {
       The brand identity was developed with a strong focus on minimalism while still creating a distinctive and recognizable visual language that captures the energy and community aspects of the running club.`,
       tags: ['Brand Identity', 'Graphic Design', 'Typography', 'Logo Design', 'Visual Design'],
       images: [
-        bhag1, // Using the local image file instead of Unsplash
-        'https://images.unsplash.com/photo-1598432475238-3f2366aef0ac?q=80&w=2070',
-        'https://images.unsplash.com/photo-1604671801908-6f0c6a092c05?q=80&w=2070'
+        bhag1,
+        bhag2,
+        bhag3,
+        bhag4
       ]
     }
   ]);
@@ -190,8 +201,6 @@ const Projects: React.FC = () => {
     
     // Calculate container dimensions - ensure images stay within viewport
     const containerRect = container.getBoundingClientRect();
-    const maxWidth = containerRect.width;
-    const maxHeight = containerRect.height;
     
     // Add images to the container with varied sizes and controlled overlap
     filteredImages.forEach((imgSrc, index) => {
@@ -199,19 +208,17 @@ const Projects: React.FC = () => {
       newImg.src = imgSrc;
       newImg.classList.add('wall-image-item');
       
-      // Increase base size range for larger images
-      const sizeVariation = randomIntFromInterval(80, 120) / 100; // Wider variation: 0.8 to 1.2
-      const baseSize = randomIntFromInterval(120, 200); // Increased from 80-140 to 120-200
-      const size = Math.floor(baseSize * sizeVariation);
+      // Random size but smaller to allow for more images to be visible
+      // Use smaller max dimensions to ensure images don't dominate the wall
+      const maxWidth = randomIntFromInterval(120, 240); // Increased size range for larger images
       
-      newImg.style.width = `${size}px`;
-      newImg.style.height = `${size}px`;
+      // Only set max-width, allowing images to maintain natural aspect ratio
+      newImg.style.maxWidth = `${maxWidth}px`;
+      newImg.style.maxHeight = `${maxWidth}px`; // Same as max-width for proportional constraint
       
       // Position within the visible container only
-      // Ensure images don't position outside the viewport by limiting position values
-      // Account for image size to prevent overflow
-      const maxXPercentage = ((maxWidth - size) / maxWidth) * 100;
-      const maxYPixels = maxHeight - size;
+      const maxXPercentage = ((containerRect.width - maxWidth) / containerRect.width) * 100;
+      const maxYPixels = containerRect.height - maxWidth;
       
       const xPos = randomIntFromInterval(0, Math.max(0, maxXPercentage));
       const yPos = randomIntFromInterval(0, Math.max(0, maxYPixels));

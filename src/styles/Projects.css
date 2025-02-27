@@ -993,29 +993,29 @@ body.modal-open {
 /* Wall image item styling - simplified */
 .wall-image-item {
   position: absolute;
-  width: 160px; /* Default, will be overridden inline */
-  height: 160px; /* Default, will be overridden inline */
-  object-fit: cover;
-  border-radius: 0px;
-  box-shadow: none;
-  transition: transform 0.2s ease;
+  object-fit: contain; /* Keep natural aspect ratio */
+  transition: transform 0.3s ease;
   cursor: pointer;
-  object-position: center;
-  opacity: 0.95;
+  border: none; /* Remove border */
+  box-shadow: none; /* Remove shadow */
+  opacity: 1;
 }
 
 .dark-mode .wall-image-item {
-  opacity: 0.95;
+  border: none;
+  opacity: 1;
 }
 
 .light-mode .wall-image-item {
-  opacity: 0.9; /* Slightly more transparent in light mode */
+  border: none;
+  opacity: 1;
 }
 
 .wall-image-item:hover {
-  transform: scale(1.02);
-  opacity: 1;
-  z-index: 10 !important; /* Bring to front on hover */
+  transform: scale(1.05) translateY(-5px);
+  z-index: 10 !important; /* Always bring hovered images to front */
+  box-shadow: none; /* No shadow even on hover */
+  border: none;
 }
 
 /* Project Detail Modal */
