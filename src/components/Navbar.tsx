@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
             <li className={location.pathname === '/' ? 'active' : ''}>
               <Link to="/">
                 <span className="nav-number">01</span>
-                <span className="nav-text">Work</span>
+                <span className="nav-text">Home</span>
               </Link>
             </li>
             <li className={location.pathname === '/projects' ? 'active' : ''}>
@@ -130,7 +130,7 @@ const Navbar: React.FC = () => {
             <li className={location.pathname === '/' ? 'active' : ''}>
               <Link to="/" onClick={() => setIsMenuOpen(false)}>
                 <span className="nav-number">01</span>
-                <span className="nav-text">Work</span>
+                <span className="nav-text">Home</span>
               </Link>
             </li>
             <li className={location.pathname === '/projects' ? 'active' : ''}>

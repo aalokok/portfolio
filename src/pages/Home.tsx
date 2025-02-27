@@ -722,14 +722,37 @@ const Home: React.FC = () => {
           </div>
         </section>
         
-        <section className="work-section">
-          <div className="grid-layout">
-            {[1, 2, 3].map((num) => (
-              <div key={num} className="work-module">
-                <div className="work-number">{num < 10 ? `0${num}` : num}</div>
-                <div className="work-sigil"></div>
+        <section className="about-section">
+          <div className="about-container">
+            <div className="about-header">
+              <h2 className="section-title">About Me</h2>
+            </div>
+            <div className="about-content">
+              <div className="about-text">
+                <p>I'm a multidisciplinary designer focused on creating minimal, thoughtful digital experiences that balance form and function. With expertise in UI/UX design, interactive media, and creative coding, I craft solutions that are both visually compelling and intuitive to use.</p>
+                <p>My approach combines strategic thinking with technical precision, ensuring that every project not only meets but exceeds expectations. I believe in the power of design to solve complex problems and create meaningful connections.</p>
               </div>
-            ))}
+              <div className="about-skills">
+                <div className="skill-category">
+                  <h3>Design</h3>
+                  <ul>
+                    <li>UI/UX Design</li>
+                    <li>Visual Design</li>
+                    <li>Design Systems</li>
+                    <li>Prototyping</li>
+                  </ul>
+                </div>
+                <div className="skill-category">
+                  <h3>Development</h3>
+                  <ul>
+                    <li>Frontend</li>
+                    <li>Creative Coding</li>
+                    <li>Interactive Media</li>
+                    <li>Web Animation</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>

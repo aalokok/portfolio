@@ -36,6 +36,11 @@
   --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-standard: 0.3s ease;
   --transition-fast: 0.2s ease;
+  
+  /* RGB values for gradient transparency */
+  --color-gray-200-rgb: 220, 220, 225;
+  --color-gray-500-rgb: 140, 140, 150;
+  --color-gray-800-rgb: 30, 30, 40;
 }
 
 /* Light theme variables */
@@ -56,6 +61,11 @@
   --color-gray-600: rgba(180, 180, 190, 0.8);
   --color-gray-700: rgba(220, 220, 225, 0.85);
   --color-gray-800: rgba(240, 240, 245, 0.9);
+  
+  /* RGB values for light mode */
+  --color-gray-200-rgb: 50, 50, 60;
+  --color-gray-500-rgb: 140, 140, 150;
+  --color-gray-800-rgb: 240, 240, 245;
 }
 
 /* Base styles */
