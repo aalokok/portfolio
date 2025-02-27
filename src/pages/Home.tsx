@@ -729,8 +729,9 @@ const Home: React.FC = () => {
             </div>
             <div className="about-content">
               <div className="about-text">
-                <p>I'm a multidisciplinary designer focused on creating minimal, thoughtful digital experiences that balance form and function. With expertise in UI/UX design, interactive media, and creative coding, I craft solutions that are both visually compelling and intuitive to use.</p>
-                <p>My approach combines strategic thinking with technical precision, ensuring that every project not only meets but exceeds expectations. I believe in the power of design to solve complex problems and create meaningful connections.</p>
+                <p>Aalok Sud is a multidisciplinary artist based in Montreal, operating at the intersection of computational arts, creative coding, and graphic design. His practice investigates digital mediums through a methodical approach that emphasizes clarity, precision, and impact. While specializing in web and graphic design, Aalok explores node-based workflows to develop adaptable and scalable visual systems that respond to evolving creative challenges.</p>
+                <p>Aalok's design philosophy navigates the tension between minimalism and focal complexity—where simplicity isn't the absence of detail but rather a deliberate method of control. He crafts experiences where strategic complexity creates moments of discovery within otherwise restrained compositions. Artistic impact drives his work, with functionality as its essential companion, resulting in tools and interfaces that are simultaneously expressive and utilitarian.</p>
+                <p>Aalok creates for those who recognize machines as more than mere tools—who understand their potential as platforms for creative exploration and expression. By interrogating the relationship between human intention and computational processes, his work reveals new possibilities at the boundaries of digital aesthetics.</p>
               </div>
               <div className="about-skills">
                 <div className="skill-category">
