@@ -49,6 +49,9 @@
   justify-content: center;
   align-items: center;
   padding: var(--space-lg) 0;
+  position: relative;
+  width: 100%;
+  overflow: visible;
 }
 
 .hero-grid {
@@ -56,6 +59,7 @@
   grid-template-columns: repeat(12, 1fr);
   gap: var(--space-md);
   position: relative;
+  width: 100%;
 }
 
 .hero-title {
@@ -307,4 +311,17 @@
   ::-webkit-scrollbar-thumb {
     transition: none !important;
   }
+}
+
+/* Add a class to center liquid metal component */
+.light-art-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: -5cm; /* Move the component upward by 4cm total */
+  padding: 2rem 0;
+  position: relative;
+  left: 0;  /* Explicitly set left to 0 */
 } 

@@ -62,7 +62,8 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
         uFlowSpeed: { value: 0.3 },
         uTouchActive: { value: 0.0 },
         uColorBleed: { value: 0.0 },
-        uHoverIntensity: { value: 0.0 } // Add hover intensity uniform
+        uHoverIntensity: { value: 0.0 }, // Add hover intensity uniform
+        uGlowIntensity: { value: 1.8 } // Increased glow intensity (was implicitly 1.0)
       },
       vertexShader: `
         varying vec2 vUv;
@@ -262,6 +263,7 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
         uniform float uTouchActive;
         uniform float uColorBleed;
         uniform float uHoverIntensity;
+        uniform float uGlowIntensity;
         
         varying vec2 vUv;
         varying vec3 vPosition;
@@ -346,7 +348,7 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
           vec3 viewDir = normalize(vViewPosition);
           
           // Calculate Fresnel effect (stronger at glancing angles)
-          float fresnelFactor = pow(1.0 - abs(dot(vNormal, viewDir)), 5.0);
+          float fresnelFactor = pow(1.0 - abs(dot(vNormal, viewDir)), 6.0);
           
           // Create flow animation for colors
           float flowTime = uTime * uFlowSpeed;
@@ -361,6 +363,9 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
           
           // Enhanced hover effect
           float hoverEffect = uHoverIntensity * 2.0; // Doubled effect
+          
+          // Get glow intensity from uniform
+          float glowMultiplier = uGlowIntensity;
           
           // Use dark mode vs light mode to change color palette
           vec3 color;
@@ -378,15 +383,15 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
               sin(flowTime * 0.2 + vPosition.y) * 0.5 + 0.5
             );
             
-            // Increased accent intensity during hover
-            float accentStrength = fresnelFactor * (0.7 + hoverEffect + lastInfluence);
+            // Increased accent intensity with glow multiplier
+            float accentStrength = fresnelFactor * (0.7 + hoverEffect + lastInfluence) * glowMultiplier;
             
             // Mix colors with fresnel factor for edge highlighting
             color = mix(baseColor, accentColor, accentStrength);
             
             // Add iridescent rainbow at edges during hover
             if (hoverEffect > 0.1 || lastInfluence > 0.1) {
-              float edgeRainbow = fresnelFactor * fresnelFactor * max(hoverEffect * 1.5, lastInfluence);
+              float edgeRainbow = fresnelFactor * fresnelFactor * max(hoverEffect * 1.5, lastInfluence) * glowMultiplier;
               vec3 rainbow = hueShift(
                 vec3(1.0, 0.5, 0.0), 
                 flowTime * 2.0 + vPosition.z * 3.0
@@ -407,15 +412,15 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
               sin(flowTime * 0.3 + vPosition.y * 2.0) * 0.5 + 0.5
             );
             
-            // Increase accent during hover
-            float accentStrength = fresnelFactor * (0.6 + hoverEffect + lastInfluence);
+            // Increase accent during hover with glow multiplier
+            float accentStrength = fresnelFactor * (0.6 + hoverEffect + lastInfluence) * glowMultiplier;
             
             // Mix colors with fresnel factor for edge highlighting
             color = mix(baseColor, accentColor, accentStrength);
             
             // Add subtle rainbow shimmer during hover
             if (hoverEffect > 0.1 || lastInfluence > 0.1) {
-              float edgeRainbow = fresnelFactor * max(hoverEffect, lastInfluence);
+              float edgeRainbow = fresnelFactor * max(hoverEffect, lastInfluence) * glowMultiplier;
               vec3 rainbow = hueShift(
                 vec3(0.9, 0.8, 0.4), 
                 flowTime * 1.5 + vPosition.z * 2.0
@@ -427,7 +432,8 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
           // Enhance specular highlights based on hover
           float specularPower = 32.0 + hoverEffect * 64.0;
           float specular = pow(max(0.0, dot(reflect(-viewDir, vNormal), vec3(0.0, 0.0, 1.0))), specularPower);
-          float specularIntensity = 0.6 + hoverEffect * 0.8;
+          // Increased specular intensity by multiplying with glow intensity
+          float specularIntensity = (0.6 + hoverEffect * 0.8) * glowMultiplier;
           color += specular * specularIntensity * (uDarkMode > 0.5 ? vec3(0.4, 0.6, 1.0) : vec3(1.0, 0.95, 0.8));
           
           // Apply gamma correction
@@ -448,31 +454,31 @@ const LiquidMetal: React.FC<LiquidMetalProps> = ({ darkMode, size, onInitialized
     
     // Add lights
     if (darkMode) {
-      // Subtle ambient light for dark mode
-      const ambientLight = new THREE.AmbientLight(0x222233, 0.8);
+      // Subtle ambient light for dark mode - increased from 0.8 to 1.0
+      const ambientLight = new THREE.AmbientLight(0x222233, 1.0);
       scene.add(ambientLight);
       
-      // Main directional light from top-right
-      const directionalLight = new THREE.DirectionalLight(0x8888ff, 1.5);
+      // Main directional light from top-right - increased from 1.5 to 2.0
+      const directionalLight = new THREE.DirectionalLight(0x8888ff, 2.0);
       directionalLight.position.set(5, 5, 5);
       scene.add(directionalLight);
       
-      // Secondary rim light from back-left for dramatic edge highlighting
-      const rimLight = new THREE.DirectionalLight(0x6644aa, 1);
+      // Secondary rim light from back-left for dramatic edge highlighting - increased from 1.0 to 1.5
+      const rimLight = new THREE.DirectionalLight(0x6644aa, 1.5);
       rimLight.position.set(-5, 3, -5);
       scene.add(rimLight);
     } else {
-      // Brighter ambient for light mode
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+      // Brighter ambient for light mode - increased from 1.0 to 1.2
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
       scene.add(ambientLight);
       
-      // Warm main light
-      const directionalLight = new THREE.DirectionalLight(0xfffaf0, 1.3);
+      // Warm main light - increased from 1.3 to 1.8
+      const directionalLight = new THREE.DirectionalLight(0xfffaf0, 1.8);
       directionalLight.position.set(5, 5, 5);
       scene.add(directionalLight);
       
-      // Cool secondary light for contrast
-      const secondaryLight = new THREE.DirectionalLight(0xe8f4ff, 0.8);
+      // Cool secondary light for contrast - increased from 0.8 to 1.2
+      const secondaryLight = new THREE.DirectionalLight(0xe8f4ff, 1.2);
       secondaryLight.position.set(-5, 3, -3);
       scene.add(secondaryLight);
     }

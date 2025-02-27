@@ -717,7 +717,9 @@ const Home: React.FC = () => {
       
       <div className="content-wrapper">
         <section className="hero-section">
-          <LightArtBox />
+          <div className="light-art-wrapper">
+            <LightArtBox />
+          </div>
         </section>
         
         <section className="work-section">
