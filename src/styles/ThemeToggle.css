@@ -3,6 +3,26 @@
   top: 20px;
   right: 20px;
   z-index: 1000;
+  display: none;
+}
+
+/* Mobile menu theme toggle - now used for all screen sizes */
+.mobile-theme-toggle {
+  position: static;
+  margin: 30px auto 0;
+  display: flex;
+  justify-content: center;
+  z-index: 102;
+  width: 100%;
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-theme-toggle .theme-toggle {
+  display: block;
+  margin: 0 auto;
+  opacity: 1;
+  visibility: visible;
 }
 
 .theme-toggle {
@@ -17,6 +37,8 @@
   overflow: hidden;
   transition: all 0.3s ease;
   backdrop-filter: blur(8px);
+  opacity: 1;
+  visibility: visible;
 }
 
 .theme-toggle-track {
@@ -95,4 +117,7 @@
   .theme-toggle-icon {
     transition: none;
   }
-} 
+}
+
+/* Remove the media query that was hiding/showing toggles based on screen size
+   since we now use the same approach for all screen sizes */ 

@@ -5,129 +5,104 @@
   width: 100%;
   height: 70px;
   z-index: 100;
-  background-color: var(--color-bg);
-  border-bottom: 1px solid var(--color-neutral);
+  background-color: var(--color-dark);
+  border-bottom: none;
+  transition: transform 0.3s ease, height 0.3s ease;
 }
 
+/* Navbar visibility states */
+.navbar.visible {
+  transform: translateY(0);
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+}
+
+/* Always show navbar when menu is open */
+.navbar.menu-open {
+  transform: translateY(0);
+}
+
+/* Removed background color change when menu is open */
+
 .navbar-container {
-  max-width: 1200px;
+  width: 100%;
   height: 100%;
-  margin: 0 auto;
-  padding: 0 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 40px;
+  position: relative;
 }
 
-.navbar-logo {
-  display: flex;
-  align-items: center;
+/* Center title styling */
+.navbar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  padding-top: 4px;
 }
 
-.logo-mark {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--color-accent);
-  color: var(--color-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 400;
+.custom-name {
+  font-family: var(--font-pilowlava);
+  font-size: 26px;
   letter-spacing: 1px;
+  font-weight: normal;
+  text-transform: lowercase;
+  color: var(--color-light);
   position: relative;
-  overflow: hidden;
+  display: inline-block;
+  line-height: 0.9;
 }
 
-.logo-mark::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--color-accent);
-  transform: scaleX(0.5);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-
-.navbar-links-container {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.navbar-links {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar-links li {
-  margin-left: 40px;
-  position: relative;
-}
-
-.navbar-links li a {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: var(--color-primary);
-  font-weight: 400;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-.navbar-links li a:hover {
-  color: var(--color-secondary);
-}
-
-.navbar-links li.active a {
-  color: var(--color-accent);
-}
-
-.nav-number {
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  opacity: 0.7;
-}
-
-.nav-text {
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.navbar-links li.active::after {
-  content: '';
-  position: absolute;
-  bottom: -24px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: var(--color-accent);
-}
-
-/* Mobile Menu */
-.menu-toggle {
+/* Remove hover underline effect */
+.custom-name::after {
   display: none;
+}
+
+/* Remove navbar title hover effect */
+.navbar-title a:hover .custom-name::after {
+  display: none;
+}
+
+/* Hide desktop navbar links and always use the mobile menu style */
+.navbar-links-container {
+  display: none;
+}
+
+/* Menu toggle button - always visible and positioned right */
+.menu-toggle {
+  display: flex;
   background: none;
   border: none;
-  width: 32px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   position: relative;
   cursor: pointer;
   z-index: 102;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Override any global button hover effects */
+.menu-toggle:hover {
+  background: none;
+  border-color: transparent;
+}
+
+/* Remove gradient and transition effects */
+.menu-toggle::before {
+  display: none;
 }
 
 .menu-bar {
-  position: absolute;
-  width: 32px;
-  height: 1px;
-  background-color: var(--color-primary);
+  position: relative;
+  width: 28px;
+  height: 2px;
+  background-color: var(--color-light);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
@@ -135,9 +110,9 @@
 .menu-bar::after {
   content: '';
   position: absolute;
-  width: 32px;
-  height: 1px;
-  background-color: var(--color-primary);
+  width: 28px;
+  height: 2px;
+  background-color: var(--color-light);
   transition: transform 0.3s ease;
 }
 
@@ -149,33 +124,39 @@
   top: 8px;
 }
 
+/* Open state (X shape) - only keep the essential transformation */
 .menu-bar.open {
   background-color: transparent;
 }
 
 .menu-bar.open::before {
   transform: translateY(8px) rotate(45deg);
-  background-color: var(--color-accent);
+  background-color: var(--color-light);
 }
 
 .menu-bar.open::after {
   transform: translateY(-8px) rotate(-45deg);
-  background-color: var(--color-accent);
+  background-color: var(--color-light);
 }
 
+/* Mobile menu - now used for all screen sizes */
 .mobile-menu {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: var(--color-bg-alt);
+  background-color: var(--color-darker);
   z-index: 101;
   opacity: 0;
   visibility: hidden;
   transform: translateX(100%);
   transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.5s;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .mobile-menu.open {
@@ -189,48 +170,115 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
 .mobile-menu-links li {
-  margin: 24px 0;
+  margin: 28px 0;
 }
 
 .mobile-menu-links li a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--color-primary);
+  color: var(--color-light);
   text-decoration: none;
-  font-size: 24px;
-  transition: color 0.3s ease;
+  transition: none;
 }
 
+/* Style for the nav text with Pilowlava font */
+.nav-text {
+  font-family: var(--font-pilowlava-regular);
+  font-weight: normal;
+  font-size: 24px;
+  margin-top: 6px;
+  line-height: 1;
+}
+
+.nav-number {
+  font-family: var(--font-display);
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 0;
+}
+
+/* Remove mobile menu links hover effect */
 .mobile-menu-links li a:hover {
-  color: var(--color-secondary);
+  color: var(--color-light);
 }
 
 .mobile-menu-links li.active a {
-  color: var(--color-accent);
+  color: var(--color-gray-200);
 }
 
+/* Mobile theme toggle positioning - now used for all screen sizes */
+.mobile-theme-toggle {
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 102;
+}
+
+/* Make sure the theme toggle is visible in the mobile menu */
+.mobile-menu.open .mobile-theme-toggle {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .navbar-container {
     padding: 0 24px;
   }
   
-  .navbar-links-container {
-    display: none;
+  .navbar {
+    height: 60px;
   }
   
+  .custom-name {
+    font-size: 20px;
+  }
+  
+  /* Ensure menu toggle is properly positioned */
   .menu-toggle {
-    display: block;
+    margin-right: 0;
+  }
+}
+
+/* Additional responsive styles for smaller screens */
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 16px;
   }
   
-  .mobile-menu {
-    display: block;
+  .custom-name {
+    font-size: 18px;
+  }
+  
+  .mobile-menu-links li a {
+    font-size: 20px;
+  }
+  
+  .nav-number {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+  
+  .nav-text {
+    font-size: 12px;
+  }
+}
+
+/* Fix for very small screens */
+@media (max-width: 320px) {
+  .navbar-container {
+    padding: 0 12px;
+  }
+  
+  .custom-name {
+    font-size: 16px;
   }
 } 

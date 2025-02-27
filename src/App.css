@@ -1,5 +1,5 @@
 /* Grayscale Design System with Light/Dark Mode */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap');
+/* Removed Google Fonts import - now in fonts.css */
 
 :root {
   /* Core colors - Dark Theme (default) */
@@ -353,6 +353,110 @@ p {
   
   .cursor-dot, .cursor-outline {
     display: none; /* Disable custom cursor on mobile */
+  }
+}
+
+/* Additional responsive breakpoints */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+  
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 4rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    padding: 0 var(--grid-unit) * 2;
+  }
+  
+  h1 {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+  }
+  
+  p {
+    font-size: 1rem;
+  }
+  
+  .metal-accent {
+    width: 100px;
+    height: 100px;
+    filter: blur(60px);
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .section {
+    padding: var(--space-md) 0;
+  }
+}
+
+/* Responsive flex utilities */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.flex-item {
+  flex: 1 1 300px;
+}
+
+@media (max-width: 768px) {
+  .flex-item {
+    flex: 1 1 100%;
+  }
+}
+
+/* Responsive grid system */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+/* Responsive image handling */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Enhanced mobile navigation spacing */
+@media (max-width: 576px) {
+  nav ul {
+    gap: var(--space-xs);
+  }
+  
+  a {
+    padding: var(--grid-unit);
   }
 }
 

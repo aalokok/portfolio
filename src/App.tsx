@@ -4,7 +4,6 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Resume from './pages/Resume';
-import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
@@ -96,9 +95,6 @@ const App: React.FC = () => {
     <ThemeProvider>
       <Router>
         <div className="App">
-          {/* Theme Toggle */}
-          <ThemeToggle />
-          
           {/* Custom Cursor Elements */}
           <div 
             ref={cursorDotRef} 
