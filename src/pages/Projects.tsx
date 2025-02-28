@@ -33,6 +33,19 @@ import bhag2 from '../assets/projects/bhag/bhag-2.png';
 import bhag3 from '../assets/projects/bhag/bhag-3.png';
 import bhag4 from '../assets/projects/bhag/bhag-4.png';
 
+// Import visuals project images
+import visuals1 from '../assets/projects/visuals/visuals-1.png';
+import visuals2 from '../assets/projects/visuals/visuals-2.png';
+import visuals3 from '../assets/projects/visuals/visuals-3.png';
+
+// Import Follow Me Around project images
+import fma1 from '../assets/projects/fma/fma-1.png';
+import fma2 from '../assets/projects/fma/fma-2.png';
+
+// Import Leave and Walk project media
+import vid1 from '../assets/projects/vid/vid-1.gif';
+import vid2 from '../assets/projects/vid/vid-2.gif';
+
 // Import arkiv project images
 import arkiv1 from '../assets/projects/arkiv/arkiv-1.png';
 import arkiv2 from '../assets/projects/arkiv/arkiv-2.png';
@@ -81,6 +94,73 @@ const Projects: React.FC = () => {
   
   // Project data
   const [projects, setProjects] = useState<Project[]>([
+    {
+      id: 'vid',
+      title: 'Leave and Walk | Cinematic Exploration of Loneliness',
+      category: 'Video Art',
+      summary: 'An atmospheric video project visualizing the emotional experience of loneliness through urban wandering.',
+      description: `"Leave and Walk" is a cinematic exploration of isolation and emotional detachment in urban environments. This video art project was conceived as a visual meditation on loneliness, using deliberate pacing, atmospheric lighting, and careful framing to convey the feeling of emotional isolation even within crowded spaces.
+
+      Key aspects of the project include:
+      • Atmospheric cinematography using natural light and shadow to enhance emotional states
+      • Deliberate use of negative space and isolation of the subject within the frame
+      • Ambient sound design layering urban noise with moments of stark silence
+      • Long tracking shots following solitary movement through transitional spaces
+      • Visual metaphors for disconnection and seeking
+      • Minimal narrative structure allowing viewers to project their own experiences
+
+      The project explores themes of urban alienation, the search for connection, and the paradox of feeling alone in populated environments. By focusing on the quieter, in-between moments of daily life, the work invites viewers to reflect on their own experiences of solitude and emotional distance.`,
+      tags: ['Cinematography', 'Video Art', 'Atmospheric', 'Urban', 'Visual Storytelling', 'Mood Study'],
+      images: [
+        vid1,
+        vid2
+      ]
+    },
+    {
+      id: 'fma',
+      title: 'Follow Me Around | Interactive Shape Follower',
+      category: 'Interactive Web',
+      summary: 'A playful web experiment where interactive shapes follow and respond to mouse movements.',
+      description: `"Follow Me Around" is a simple yet engaging web-based interactive experiment that explores mouse-following behavior and user interaction.
+
+      Key features include:
+      • Responsive shape elements that dynamically follow mouse cursor movements
+      • Click interactions that trigger visual and behavioral changes in the shapes
+      • Smooth animation transitions between movement states
+      • Minimalist design focusing on interaction over complex visuals
+      • Built with vanilla JavaScript for optimal performance
+      • Exploration of basic physics principles like inertia, attraction, and momentum
+
+      This project was developed as an exercise in interactive web design, focusing on creating engaging user experiences with simple programming techniques. The experiment is hosted at Concordia University's hybrid server and demonstrates fundamentals of interactive motion design.`,
+      tags: ['JavaScript', 'Interactive Design', 'Animation', 'Web Development', 'Motion Design'],
+      images: [
+        fma1,
+        fma2
+      ]
+    },
+    {
+      id: 'visuals',
+      title: 'Visuals | XR Social Media App',
+      category: 'Interaction Design',
+      summary: 'An XR social media application designed to let users create and discover location-based digital art in real-world spaces.',
+      description: `Visuals is an XR social media application designed for my interaction design class, focused on bridging digital creativity with physical spaces.
+
+      Key features include:
+      • Location-based digital art creation and discovery
+      • AR interface allowing users to draw or place images in real-world locations
+      • Social features for sharing and discovering other users' creations
+      • Interactive map showing hotspots of creative activity
+      • Gamification elements encouraging exploration of new locations
+      • Intuitive design with gesture-based controls for natural interaction
+
+      The application was designed in Figma with a focus on user experience and interaction patterns that feel natural in an augmented reality context. The project involved extensive user research, wireframing, prototyping, and usability testing to create an engaging platform that encourages creative expression in public spaces.`,
+      tags: ['Interaction Design', 'Figma', 'UX/UI', 'Augmented Reality', 'Social Media', 'Prototyping'],
+      images: [
+        visuals1,
+        visuals2,
+        visuals3
+      ]
+    },
     {
       id: 'arkiv',
       title: 'ARKIV | Interactive Digital Archive Platform',
@@ -368,22 +448,22 @@ const Projects: React.FC = () => {
       newImg.src = imgSrc;
       newImg.classList.add('wall-image-item');
       
-      // Special handling for GIF to ensure it loads
-      const isGif = typeof imgSrc === 'string' && imgSrc.endsWith('.gif');
-      if (isGif) {
-        // Add loading="eager" and specific styling for GIFs
+      // Check if this image is from the Senses project or is a GIF to make it larger
+      const isGifFile = typeof imgSrc === 'string' && imgSrc.endsWith('.gif');
+      const isSensesImage = imgSrc === sensesGif || imgSrc === sensesImg || imgSrc === sensesImg2;
+      const shouldBeLarger = isSensesImage || isGifFile;
+      
+      // Special handling for GIF to ensure it loads properly
+      if (isGifFile) {
         newImg.setAttribute('loading', 'eager');
-        newImg.style.minWidth = '100px'; // Ensure GIF has minimum dimensions
+        newImg.style.minWidth = '150px'; // Ensure GIF has minimum dimensions
         newImg.style.background = '#000'; // Dark background for GIF
       }
       
-      // Check if this image is from the Senses project to make it larger
-      const isSensesImage = imgSrc === sensesGif || imgSrc === sensesImg || imgSrc === sensesImg2;
-      
-      // Use larger dimensions for Senses project images
-      const maxWidth = isSensesImage 
-        ? randomIntFromInterval(240, 320) // Larger size range for Senses project
-        : randomIntFromInterval(120, 240); // Standard size for other images
+      // Use larger dimensions for Senses project images and GIFs
+      const maxWidth = shouldBeLarger
+        ? randomIntFromInterval(320, 420) // Increased size range for featured content
+        : randomIntFromInterval(180, 300); // Standard size range for other images
       
       // Only set max-width, allowing images to maintain natural aspect ratio
       newImg.style.maxWidth = `${maxWidth}px`;
