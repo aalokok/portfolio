@@ -61,7 +61,7 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  margin-top: -3cm; /* Move the component upward by 4cm total */
+  margin-top: -1.2cm; /* Move the component upward by 4cm total */
   padding: 2rem 0;
   position: relative;
   left: 0;  /* Explicitly set left to 0 */
@@ -313,5 +313,74 @@
   .about-container,
   ::-webkit-scrollbar-thumb {
     transition: none !important;
+  }
+}
+
+/* Mobile notification banner */
+.mobile-notification {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 16px;
+  text-align: center;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-body);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.light-mode .mobile-notification {
+  background-color: rgba(240, 240, 245, 0.85);
+  color: #000;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.mobile-notification p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mobile-notification .dismiss-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.light-mode .mobile-notification .dismiss-btn {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #000;
+}
+
+.mobile-notification .dismiss-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.light-mode .mobile-notification .dismiss-btn:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Only display on mobile devices */
+@media (max-width: 768px) {
+  .mobile-notification {
+    display: block;
+  }
+}
+
+/* Adjust top padding when notification is visible */
+@media (max-width: 768px) {
+  .home-container.has-notification .content-wrapper {
+    padding-top: 80px;
   }
 } 

@@ -38,6 +38,7 @@ const Home: React.FC = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
+  const [showMobileNotification, setShowMobileNotification] = useState(true);
   
   // Advanced noise function with distortion
   const liquidNoise = (x: number, y: number, z: number, distortion: number) => {
@@ -711,8 +712,33 @@ const Home: React.FC = () => {
     };
   }, []);
 
+  // Check if the user is on a mobile device
+  useEffect(() => {
+    const isMobileDevice = window.innerWidth <= 768;
+    setShowMobileNotification(isMobileDevice);
+    
+    // Save to localStorage to remember dismissal between sessions
+    const hasSeenNotification = localStorage.getItem('hasSeenMobileNotification');
+    if (hasSeenNotification === 'true') {
+      setShowMobileNotification(false);
+    }
+  }, []);
+  
+  const dismissNotification = () => {
+    setShowMobileNotification(false);
+    localStorage.setItem('hasSeenMobileNotification', 'true');
+  };
+
   return (
-    <div className="home-container">
+    <div className={`home-container ${showMobileNotification ? 'has-notification' : ''}`}>
+      {/* Mobile Notification Banner */}
+      {showMobileNotification && (
+        <div className="mobile-notification">
+          <p>This website is optimized for desktop viewing. For the best experience, please visit on a computer.</p>
+          <button onClick={dismissNotification} className="dismiss-btn">Dismiss</button>
+        </div>
+      )}
+      
       <canvas ref={canvasRef} className="liquid-canvas"></canvas>
       
       <div className="content-wrapper">

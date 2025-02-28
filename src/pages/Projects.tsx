@@ -78,6 +78,8 @@ interface Project {
   description: string;
   tags: string[];
   images: string[];
+  projectUrl?: string; // Add optional project URL field
+  githubUrl?: string; // Add optional GitHub URL field
 }
 
 declare global {
@@ -114,7 +116,8 @@ const Projects: React.FC = () => {
       images: [
         vid1,
         vid2
-      ]
+      ],
+      projectUrl: 'https://vimeo.com/example/leave-and-walk'
     },
     {
       id: 'fma',
@@ -136,7 +139,9 @@ const Projects: React.FC = () => {
       images: [
         fma1,
         fma2
-      ]
+      ],
+      projectUrl: 'https://example.com/follow-me-around',
+      githubUrl: 'https://github.com/example/follow-me-around'
     },
     {
       id: 'visuals',
@@ -159,7 +164,8 @@ const Projects: React.FC = () => {
         visuals1,
         visuals2,
         visuals3
-      ]
+      ],
+      projectUrl: 'https://figma.com/file/example/visuals'
     },
     {
       id: 'arkiv',
@@ -184,7 +190,9 @@ const Projects: React.FC = () => {
         arkiv2,
         arkiv3,
         arkiv4
-      ]
+      ],
+      projectUrl: 'https://arkiv-project.herokuapp.com',
+      githubUrl: 'https://github.com/example/arkiv'
     },
     {
       id: 'soundmachine',
@@ -206,7 +214,8 @@ const Projects: React.FC = () => {
         soundmachine1,
         soundmachine2,
         soundmachine3
-      ]
+      ],
+      projectUrl: 'https://cycling74.com/projects/example/soundmachine'
     },
     {
       id: 'bhag',
@@ -230,7 +239,8 @@ const Projects: React.FC = () => {
         bhag2,
         bhag3,
         bhag4
-      ]
+      ],
+      projectUrl: 'https://behance.net/gallery/example/bhag'
     },
     {
       id: 'graphic-portfolio',
@@ -256,7 +266,8 @@ const Projects: React.FC = () => {
         graphic3,
         graphic4,
         graphic5
-      ]
+      ],
+      projectUrl: 'https://dribbble.com/example/portfolio'
     },
     {
       id: 'senses',
@@ -279,7 +290,8 @@ const Projects: React.FC = () => {
         sensesGif,
         sensesImg,
         sensesImg2
-      ]
+      ],
+      projectUrl: 'https://vimeo.com/example/senses'
     }
   ]);
   
@@ -290,6 +302,10 @@ const Projects: React.FC = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [allImages, setAllImages] = useState<string[]>([]);
   const [filteredImages, setFilteredImages] = useState<string[]>([]);
+  
+  // Add state for fullscreen image viewing
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [fullscreenIndex, setFullscreenIndex] = useState<number>(0);
   
   // Extract all unique tags and create image array
   useEffect(() => {
@@ -357,6 +373,13 @@ const Projects: React.FC = () => {
       zIndex: number
     }> = [];
     
+    // Randomize image order to ensure different layouts each time
+    const randomizedImages = [...filteredImages];
+    for (let i = randomizedImages.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [randomizedImages[i], randomizedImages[j]] = [randomizedImages[j], randomizedImages[i]];
+    }
+    
     // Function to check overlap percentage with existing images
     const getOverlapPercentage = (x: number, y: number, width: number, height: number) => {
       let maxOverlapPercentage = 0;
@@ -375,6 +398,25 @@ const Projects: React.FC = () => {
       }
       
       return maxOverlapPercentage;
+    };
+    
+    // Function to count how many images would overlap with this position
+    const getOverlapCount = (x: number, y: number, width: number, height: number) => {
+      let overlapCount = 0;
+      
+      for (const img of placedImages) {
+        // Calculate overlap area
+        const overlapX = Math.max(0, Math.min(x + width, img.x + img.width) - Math.max(x, img.x));
+        const overlapY = Math.max(0, Math.min(y + height, img.y + img.height) - Math.max(y, img.y));
+        const overlapArea = overlapX * overlapY;
+        
+        // Check if this image overlaps with the current position
+        if (overlapArea > 0) {
+          overlapCount++;
+        }
+      }
+      
+      return overlapCount;
     };
     
     // Function to find a good position with limited overlap
@@ -443,15 +485,14 @@ const Projects: React.FC = () => {
     };
     
     // Add images to the container with better distribution and limited overlap
-    filteredImages.forEach((imgSrc, index) => {
+    randomizedImages.forEach((imgSrc, index) => {
       const newImg = document.createElement("img");
       newImg.src = imgSrc;
       newImg.classList.add('wall-image-item');
+      newImg.title = "Click to view details | Alt+Click for fullscreen";
       
-      // Check if this image is from the Senses project or is a GIF to make it larger
+      // Check if this image is a GIF file to make it larger
       const isGifFile = typeof imgSrc === 'string' && imgSrc.endsWith('.gif');
-      const isSensesImage = imgSrc === sensesGif || imgSrc === sensesImg || imgSrc === sensesImg2;
-      const shouldBeLarger = isSensesImage || isGifFile;
       
       // Special handling for GIF to ensure it loads properly
       if (isGifFile) {
@@ -460,19 +501,17 @@ const Projects: React.FC = () => {
         newImg.style.background = '#000'; // Dark background for GIF
       }
       
-      // Use larger dimensions for Senses project images and GIFs
-      const maxWidth = shouldBeLarger
-        ? randomIntFromInterval(320, 420) // Increased size range for featured content
-        : randomIntFromInterval(180, 300); // Standard size range for other images
+      // Set image dimensions - all project images get the same size range now
+      const maxWidth = isGifFile
+        ? randomIntFromInterval(320, 420) // Larger size for GIFs only
+        : randomIntFromInterval(200, 350); // Standard size range for all other images
       
       // Only set max-width, allowing images to maintain natural aspect ratio
       newImg.style.maxWidth = `${maxWidth}px`;
       newImg.style.maxHeight = `${maxWidth}px`; // Same as max-width for proportional constraint
       
-      // Select a z-index, giving priority to Senses images
-      const zIndex = isSensesImage 
-        ? randomIntFromInterval(5, 10) // Higher z-index for Senses project to ensure visibility
-        : randomIntFromInterval(1, 5);
+      // All images get same z-index range, no special priority
+      const zIndex = randomIntFromInterval(1, 5);
       
       newImg.style.zIndex = zIndex.toString();
       
@@ -494,15 +533,26 @@ const Projects: React.FC = () => {
         zIndex
       });
       
-      // Add click event to show project details
-      newImg.addEventListener('click', () => {
+      // Add click event to show project details or open fullscreen
+      newImg.addEventListener('click', (e) => {
         const projectForImage = findProjectByImage(imgSrc);
         if (projectForImage) {
-          setSelectedProject(projectForImage);
-          document.body.classList.add('modal-open');
+          // Check if user is pressing the Alt key for direct fullscreen
+          if (e.altKey) {
+            // Find the index of this image in the project
+            const imgIndex = projectForImage.images.indexOf(imgSrc);
+            if (imgIndex !== -1) {
+              setSelectedProject(projectForImage);
+              openFullscreenImage(imgSrc, imgIndex);
+            }
+          } else {
+            setSelectedProject(projectForImage);
+            document.body.classList.add('modal-open');
+          }
         }
       });
       
+      // Add the image to the container
       container.appendChild(newImg);
     });
   }, [filteredImages, showFilters]);
@@ -537,6 +587,57 @@ const Projects: React.FC = () => {
     document.body.classList.remove('modal-open');
   };
   
+  // Open fullscreen image
+  const openFullscreenImage = (image: string, index: number) => {
+    setFullscreenImage(image);
+    setFullscreenIndex(index);
+    document.body.classList.add('fullscreen-open');
+  };
+  
+  // Close fullscreen image
+  const closeFullscreenImage = () => {
+    setFullscreenImage(null);
+    document.body.classList.remove('fullscreen-open');
+  };
+  
+  // Navigate to next image in fullscreen
+  const nextFullscreenImage = () => {
+    if (!selectedProject) return;
+    
+    const newIndex = (fullscreenIndex + 1) % selectedProject.images.length;
+    setFullscreenIndex(newIndex);
+    setFullscreenImage(selectedProject.images[newIndex]);
+  };
+  
+  // Navigate to previous image in fullscreen
+  const prevFullscreenImage = () => {
+    if (!selectedProject) return;
+    
+    const newIndex = (fullscreenIndex - 1 + selectedProject.images.length) % selectedProject.images.length;
+    setFullscreenIndex(newIndex);
+    setFullscreenImage(selectedProject.images[newIndex]);
+  };
+  
+  // Handle keyboard navigation for fullscreen mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (fullscreenImage) {
+        if (e.key === 'Escape') {
+          closeFullscreenImage();
+        } else if (e.key === 'ArrowRight') {
+          nextFullscreenImage();
+        } else if (e.key === 'ArrowLeft') {
+          prevFullscreenImage();
+        }
+      } else if (selectedProject && e.key === 'Escape') {
+        closeProjectDetails();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [fullscreenImage, fullscreenIndex, selectedProject]);
+  
   // Generate a color for a tag based on its string
   const getTagColor = (tag: string) => {
     let hash = 0;
@@ -552,13 +653,61 @@ const Projects: React.FC = () => {
       : `hsl(${h}, 60%, 40%)`; // Darker color for light mode
   };
   
+  // Render fullscreen image viewer
+  const renderFullscreenViewer = () => {
+    if (!fullscreenImage) return null;
+    
+    return (
+      <motion.div 
+        className={`fullscreen-image-viewer ${darkMode ? 'dark-mode' : 'light-mode'}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={closeFullscreenImage}
+      >
+        <div className="fullscreen-controls">
+          <button className="fullscreen-close" onClick={closeFullscreenImage}>
+            <span>×</span>
+          </button>
+          
+          <div className="fullscreen-navigation">
+            <button className="nav-arrow prev" onClick={(e) => { e.stopPropagation(); prevFullscreenImage(); }}>
+              <span>‹</span>
+            </button>
+            <button className="nav-arrow next" onClick={(e) => { e.stopPropagation(); nextFullscreenImage(); }}>
+              <span>›</span>
+            </button>
+          </div>
+          
+          {selectedProject && (
+            <div className="image-counter">
+              {fullscreenIndex + 1} / {selectedProject.images.length}
+            </div>
+          )}
+          
+          <div className="keyboard-navigation-help">
+            <span>Use ← → keys to navigate • ESC to close</span>
+          </div>
+        </div>
+        
+        <div className="fullscreen-image-container" onClick={(e) => e.stopPropagation()}>
+          <img 
+            src={fullscreenImage} 
+            alt={selectedProject ? `${selectedProject.title} - fullscreen view` : 'Fullscreen image'} 
+            className="fullscreen-image"
+          />
+        </div>
+      </motion.div>
+    );
+  };
+  
   // Render project detail modal
   const renderProjectModal = () => {
     if (!selectedProject) return null;
 
     return (
-      <motion.div
-        className="project-detail-modal"
+      <motion.div 
+        className={`project-detail-modal ${darkMode ? 'dark-mode' : 'light-mode'}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -570,38 +719,72 @@ const Projects: React.FC = () => {
           
           <div className="project-detail-header">
             <div className="title-category-wrapper">
-            <h2>{selectedProject.title}</h2>
-            <p className="project-category">{selectedProject.category}</p>
-          </div>
-          
-          <div className="project-tags">
-            {selectedProject.tags.map(tag => (
-              <span 
-                key={tag} 
-                className="project-tag"
-                style={{ backgroundColor: `${getTagColor(tag)}20`, borderColor: getTagColor(tag) }}
-              >
-                {tag}
-              </span>
-            ))}
+              <h2>{selectedProject.title}</h2>
+              <p className="project-category">{selectedProject.category}</p>
+            </div>
+            
+            <div className="project-tags">
+              {selectedProject.tags.map(tag => (
+                <span 
+                  key={tag} 
+                  className="project-tag"
+                  style={{ backgroundColor: `${getTagColor(tag)}20`, borderColor: getTagColor(tag) }}
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
           
           <div className="project-content-layout">
-          <div className="project-gallery">
-            {selectedProject.images.map((img, index) => (
-              <div key={index} className="gallery-image">
+            <div className="project-gallery">
+              {selectedProject.images.map((img, index) => (
+                <div 
+                  key={index} 
+                  className="gallery-image"
+                  onClick={() => openFullscreenImage(img, index)}
+                  title="Click to view in fullscreen"
+                >
                   <img src={img} alt={`${selectedProject.title} - ${index + 1}`} loading="lazy" />
-              </div>
-            ))}
-          </div>
-          
-          <div className="project-detail-text">
-            <p className="project-summary">{selectedProject.summary}</p>
+                  <div className="gallery-image-overlay">
+                    <span className="fullscreen-icon">⤢</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="project-detail-text">
+              <p className="project-summary">{selectedProject.summary}</p>
               <div className="project-description">
                 {selectedProject.description.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph.trim()}</p>
                 ))}
+              </div>
+              
+              <div className="project-links">
+                {/* View Project button - simplified */}
+                {selectedProject.projectUrl && (
+                  <a 
+                    href={selectedProject.projectUrl} 
+                    className="project-link-btn" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    View Project →
+                  </a>
+                )}
+                
+                {/* View on GitHub button - simplified */}
+                {selectedProject.githubUrl && (
+                  <a 
+                    href={selectedProject.githubUrl} 
+                    className="project-link-btn github-btn" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    View on GitHub →
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -613,7 +796,7 @@ const Projects: React.FC = () => {
   return (
     <div className={`projects-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       {/* Filter toggle button */}
-      <button className="filter-toggle" onClick={() => setShowFilters(!showFilters)}>
+      <button className={`filter-toggle ${darkMode ? 'dark-mode' : 'light-mode'}`} onClick={() => setShowFilters(!showFilters)}>
         <span className="filter-toggle-text">
           {showFilters ? 'Hide Filters' : 'Filter Projects'}
         </span>
@@ -624,7 +807,7 @@ const Projects: React.FC = () => {
       </button>
       
       {/* Filter panel */}
-      <div className={`filter-container ${showFilters ? 'visible' : 'collapsed'}`}>
+      <div className={`filter-container ${showFilters ? 'visible' : 'collapsed'} ${darkMode ? 'dark-mode' : 'light-mode'}`}>
         <h3 className="filter-title">Filter by technologies</h3>
         <div className="filter-tags">
           {tags.map(tag => (
@@ -658,6 +841,11 @@ const Projects: React.FC = () => {
       {/* Project Detail Modal */}
       <AnimatePresence>
         {selectedProject && renderProjectModal()}
+      </AnimatePresence>
+      
+      {/* Fullscreen Image Viewer */}
+      <AnimatePresence>
+        {fullscreenImage && renderFullscreenViewer()}
       </AnimatePresence>
     </div>
   );
