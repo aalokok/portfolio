@@ -999,6 +999,14 @@ body.modal-open {
   border: none; /* Remove border */
   box-shadow: none; /* Remove shadow */
   opacity: 1;
+  z-index: 1; /* Default z-index */
+}
+
+/* Special styles for GIF files */
+img.wall-image-item[src$=".gif"] {
+  z-index: 5; /* Higher z-index to ensure GIFs are visible */
+  object-fit: contain !important;
+  background: #000; /* Dark background to make transparent GIFs more visible */
 }
 
 .dark-mode .wall-image-item {

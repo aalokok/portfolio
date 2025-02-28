@@ -39,6 +39,23 @@ import arkiv2 from '../assets/projects/arkiv/arkiv-2.png';
 import arkiv3 from '../assets/projects/arkiv/arkiv-3.png';
 import arkiv4 from '../assets/projects/arkiv/arkiv-4.png';
 
+// Import graphic design portfolio images
+import graphic1 from '../assets/projects/graphic/graphic-1.png';
+import graphic2 from '../assets/projects/graphic/graphic-2.png';
+import graphic3 from '../assets/projects/graphic/graphic-3.png';
+import graphic4 from '../assets/projects/graphic/graphic-4.png';
+import graphic5 from '../assets/projects/graphic/graphic-5.png';
+
+// Import soundmachine project images
+import soundmachine1 from '../assets/projects/soundmachine/soundmachine-1.png';
+import soundmachine2 from '../assets/projects/soundmachine/soundmachine-2.png';
+import soundmachine3 from '../assets/projects/soundmachine/soundmachine-3.png';
+
+// Import senses project media
+import sensesGif from '../assets/projects/senses/senses-gif.gif';
+import sensesImg from '../assets/projects/senses/senses-img.png';
+import sensesImg2 from '../assets/projects/senses/senses-img2.png';
+
 // Define project structure
 interface Project {
   id: string;
@@ -106,9 +123,9 @@ const Projects: React.FC = () => {
       The system was built using Max/MSP, focusing on creating a versatile tool for sound design and music production that bridges the gap between traditional sequencing and environmental sound simulation.`,
       tags: ['Max/MSP', 'Generative Audio', 'Granular Synthesis', 'Spatial Sound', 'Audio Design'],
       images: [
-        'https://images.unsplash.com/photo-1563330232-57114bb0823c?q=80&w=2070',
-        'https://images.unsplash.com/photo-1558584673-c834fb1cc3ca?q=80&w=2070',
-        'https://images.unsplash.com/photo-1607016284318-d1384f74e73f?q=80&w=2070'
+        soundmachine1,
+        soundmachine2,
+        soundmachine3
       ]
     },
     {
@@ -133,6 +150,55 @@ const Projects: React.FC = () => {
         bhag2,
         bhag3,
         bhag4
+      ]
+    },
+    {
+      id: 'graphic-portfolio',
+      title: 'Design Retrospective | Mixed Media Collection',
+      category: 'Graphic Design',
+      summary: 'A curated collection of graphic design work spanning album covers, event flyers, posters, and experimental visual pieces.',
+      description: `This portfolio showcases a diverse collection of graphic design work created over several years, spanning various mediums, styles, and purposes.
+
+      Featured works include:
+      • Album cover designs for independent musicians and record labels
+      • Event flyers and promotional materials for concerts, exhibitions, and community events
+      • Experimental typographic explorations and poster designs
+      • Editorial layouts and magazine spreads
+      • Digital illustrations and mixed-media compositions
+
+      Each piece in this collection represents a unique challenge and creative approach, demonstrating versatility in style while maintaining a consistent quality and attention to detail. The works range from minimalist, typography-focused designs to complex, layered visual compositions that blend digital and analog techniques.
+
+      Design tools used include Adobe Creative Suite (Photoshop, Illustrator, InDesign), Procreate, and various traditional media including hand-drawn illustrations, collage, and photography.`,
+      tags: ['Album Cover Design', 'Typography', 'Editorial Design', 'Poster Design', 'Illustration', 'Mixed Media', 'Print Design'],
+      images: [
+        graphic1,
+        graphic2,
+        graphic3,
+        graphic4,
+        graphic5
+      ]
+    },
+    {
+      id: 'senses',
+      title: 'Senses | Urban Nostalgia Short Film',
+      category: 'Videography',
+      summary: 'A stylized video montage inspired by Wong Kar Wai\'s cinematic aesthetics, exploring urban isolation and fleeting connections.',
+      description: `"Senses" is a short video montage that pays homage to the distinctive visual style and atmosphere of Wong Kar Wai's "Fallen Angels," using similar cinematic techniques to create a mood-driven narrative.
+
+      Notable elements include:
+      • High-contrast color grading with saturated blues and reds
+      • Experimental framing and composition techniques 
+      • Use of step-printing and slow motion to create dreamlike sequences
+      • Juxtaposition of urban environments and intimate character moments
+      • Handheld camera work combined with static compositions
+      • Evocative sound design complementing visual storytelling
+
+      The project explores themes of urban isolation, nostalgia, and fleeting human connections through visual storytelling rather than traditional narrative structure. The piece demonstrates skill in cinematography, editing, and creating atmospheric visual experiences.`,
+      tags: ['Cinematography', 'Film Editing', 'Visual Storytelling', 'Color Grading', 'Experimental', 'Motion Graphics'],
+      images: [
+        sensesGif,
+        sensesImg,
+        sensesImg2
       ]
     }
   ]);
@@ -202,32 +268,151 @@ const Projects: React.FC = () => {
     // Calculate container dimensions - ensure images stay within viewport
     const containerRect = container.getBoundingClientRect();
     
-    // Add images to the container with varied sizes and controlled overlap
+    // Track placed images to manage overlap
+    const placedImages: Array<{
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      zIndex: number
+    }> = [];
+    
+    // Function to check overlap percentage with existing images
+    const getOverlapPercentage = (x: number, y: number, width: number, height: number) => {
+      let maxOverlapPercentage = 0;
+      
+      for (const img of placedImages) {
+        // Calculate overlap area
+        const overlapX = Math.max(0, Math.min(x + width, img.x + img.width) - Math.max(x, img.x));
+        const overlapY = Math.max(0, Math.min(y + height, img.y + img.height) - Math.max(y, img.y));
+        const overlapArea = overlapX * overlapY;
+        
+        // Calculate percentage of this image that would be covered
+        const thisImgArea = width * height;
+        const overlapPercentage = (overlapArea / thisImgArea) * 100;
+        
+        maxOverlapPercentage = Math.max(maxOverlapPercentage, overlapPercentage);
+      }
+      
+      return maxOverlapPercentage;
+    };
+    
+    // Function to find a good position with limited overlap
+    const findGoodPosition = (width: number, height: number, maxAttempts = 30) => {
+      let bestX = 0;
+      let bestY = 0;
+      let bestOverlap = 100; // Start with worst case
+      
+      // Create a grid of positions to try (more structured than pure random)
+      const gridSize = 10;
+      const xStep = (containerRect.width - width) / gridSize;
+      const yStep = (containerRect.height - height) / gridSize;
+      
+      // Define a minimum Y position to ensure images start below the header
+      // This accounts for the header height and filter panel if visible
+      const headerHeight = showFilters ? 150 : 70; // Adjust these values based on your actual header heights
+      const minYPosition = headerHeight;
+      
+      // Try maxAttempts random positions and pick the best one
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        // Mix of grid-based and random positioning for better distribution
+        const useGrid = attempt < maxAttempts / 2;
+        
+        let x, y;
+        if (useGrid) {
+          // Grid-based position with some randomness
+          const gridX = attempt % gridSize;
+          const gridY = Math.floor(attempt / gridSize) % gridSize;
+          x = (gridX * xStep) + randomIntFromInterval(-10, 10);
+          // Ensure Y position starts below the header
+          y = minYPosition + (gridY * yStep) + randomIntFromInterval(-10, 10);
+        } else {
+          // Pure random position
+          x = randomIntFromInterval(0, Math.max(0, containerRect.width - width));
+          // Ensure Y position starts below the header
+          y = randomIntFromInterval(minYPosition, Math.max(minYPosition, containerRect.height - height));
+        }
+        
+        // Ensure within bounds
+        x = Math.max(0, Math.min(x, containerRect.width - width));
+        y = Math.max(minYPosition, Math.min(y, containerRect.height - height));
+        
+        const overlapPercentage = getOverlapPercentage(x, y, width, height);
+        
+        // If we found a position with less than 50% overlap, use it immediately
+        if (overlapPercentage < 50) {
+          bestX = x;
+          bestY = y;
+          bestOverlap = overlapPercentage;
+          
+          // If very little overlap, no need to keep searching
+          if (overlapPercentage < 20) {
+            break;
+          }
+        }
+        
+        // Otherwise keep track of the best position found
+        if (overlapPercentage < bestOverlap) {
+          bestX = x;
+          bestY = y;
+          bestOverlap = overlapPercentage;
+        }
+      }
+      
+      return { x: bestX, y: bestY };
+    };
+    
+    // Add images to the container with better distribution and limited overlap
     filteredImages.forEach((imgSrc, index) => {
       const newImg = document.createElement("img");
       newImg.src = imgSrc;
       newImg.classList.add('wall-image-item');
       
-      // Random size but smaller to allow for more images to be visible
-      // Use smaller max dimensions to ensure images don't dominate the wall
-      const maxWidth = randomIntFromInterval(120, 240); // Increased size range for larger images
+      // Special handling for GIF to ensure it loads
+      const isGif = typeof imgSrc === 'string' && imgSrc.endsWith('.gif');
+      if (isGif) {
+        // Add loading="eager" and specific styling for GIFs
+        newImg.setAttribute('loading', 'eager');
+        newImg.style.minWidth = '100px'; // Ensure GIF has minimum dimensions
+        newImg.style.background = '#000'; // Dark background for GIF
+      }
+      
+      // Check if this image is from the Senses project to make it larger
+      const isSensesImage = imgSrc === sensesGif || imgSrc === sensesImg || imgSrc === sensesImg2;
+      
+      // Use larger dimensions for Senses project images
+      const maxWidth = isSensesImage 
+        ? randomIntFromInterval(240, 320) // Larger size range for Senses project
+        : randomIntFromInterval(120, 240); // Standard size for other images
       
       // Only set max-width, allowing images to maintain natural aspect ratio
       newImg.style.maxWidth = `${maxWidth}px`;
       newImg.style.maxHeight = `${maxWidth}px`; // Same as max-width for proportional constraint
       
-      // Position within the visible container only
-      const maxXPercentage = ((containerRect.width - maxWidth) / containerRect.width) * 100;
-      const maxYPixels = containerRect.height - maxWidth;
+      // Select a z-index, giving priority to Senses images
+      const zIndex = isSensesImage 
+        ? randomIntFromInterval(5, 10) // Higher z-index for Senses project to ensure visibility
+        : randomIntFromInterval(1, 5);
       
-      const xPos = randomIntFromInterval(0, Math.max(0, maxXPercentage));
-      const yPos = randomIntFromInterval(0, Math.max(0, maxYPixels));
+      newImg.style.zIndex = zIndex.toString();
+      
+      // Find a good position with limited overlap
+      const { x, y } = findGoodPosition(maxWidth, maxWidth);
+      
+      // Convert x position to percentage (better for responsive layout)
+      const xPos = (x / containerRect.width) * 100;
       
       newImg.style.left = `${xPos}%`;
-      newImg.style.top = `${yPos}px`;
+      newImg.style.top = `${y}px`;
       
-      // Vary z-index to create some layering
-      newImg.style.zIndex = randomIntFromInterval(1, 5).toString();
+      // Add this image to the placed images array for future overlap checks
+      placedImages.push({
+        x,
+        y,
+        width: maxWidth,
+        height: maxWidth,
+        zIndex
+      });
       
       // Add click event to show project details
       newImg.addEventListener('click', () => {
@@ -240,7 +425,7 @@ const Projects: React.FC = () => {
       
       container.appendChild(newImg);
     });
-  }, [filteredImages]);
+  }, [filteredImages, showFilters]);
   
   // Find which project contains a specific image
   const findProjectByImage = (imageSrc: string): Project | null => {
@@ -305,34 +490,34 @@ const Projects: React.FC = () => {
           
           <div className="project-detail-header">
             <div className="title-category-wrapper">
-              <h2>{selectedProject.title}</h2>
-              <p className="project-category">{selectedProject.category}</p>
-            </div>
-            
-            <div className="project-tags">
-              {selectedProject.tags.map(tag => (
-                <span 
-                  key={tag} 
-                  className="project-tag"
-                  style={{ backgroundColor: `${getTagColor(tag)}20`, borderColor: getTagColor(tag) }}
-                >
-                  {tag}
-                </span>
-              ))}
+            <h2>{selectedProject.title}</h2>
+            <p className="project-category">{selectedProject.category}</p>
+          </div>
+          
+          <div className="project-tags">
+            {selectedProject.tags.map(tag => (
+              <span 
+                key={tag} 
+                className="project-tag"
+                style={{ backgroundColor: `${getTagColor(tag)}20`, borderColor: getTagColor(tag) }}
+              >
+                {tag}
+              </span>
+            ))}
             </div>
           </div>
           
           <div className="project-content-layout">
-            <div className="project-gallery">
-              {selectedProject.images.map((img, index) => (
-                <div key={index} className="gallery-image">
+          <div className="project-gallery">
+            {selectedProject.images.map((img, index) => (
+              <div key={index} className="gallery-image">
                   <img src={img} alt={`${selectedProject.title} - ${index + 1}`} loading="lazy" />
-                </div>
-              ))}
-            </div>
-            
-            <div className="project-detail-text">
-              <p className="project-summary">{selectedProject.summary}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="project-detail-text">
+            <p className="project-summary">{selectedProject.summary}</p>
               <div className="project-description">
                 {selectedProject.description.split('\n').map((paragraph, index) => (
                   <p key={index}>{paragraph.trim()}</p>
