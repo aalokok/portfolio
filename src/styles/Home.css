@@ -318,42 +318,39 @@
 
 /* Mobile notification banner */
 .mobile-notification {
-  display: none; /* Hidden by default */
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   background-color: var(--color-darker);
   color: var(--color-light);
-  padding: 32px;
-  text-align: center;
-  z-index: 9999; /* Ensure it's above everything */
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: var(--font-display);
+  z-index: 9999;
 }
 
 .mobile-notification p {
   margin: 0;
-  font-size: 1.2rem;
+  padding: 0 20px;
+  font-size: 1.5rem;
   line-height: 1.6;
-  max-width: 80%;
+  max-width: 600px;
   font-weight: 500;
   color: var(--color-gray-100);
-}
-
-/* Remove dismiss button styles since we're not using it anymore */
-.mobile-notification .dismiss-btn {
-  display: none;
+  text-align: center;
 }
 
 /* Always display on mobile devices */
 @media (max-width: 768px) {
   .mobile-notification {
     display: flex;
+  }
+  
+  .mobile-notification p {
+    font-size: 1.2rem;
+    padding: 0 24px;
   }
   
   /* Hide all content on mobile */
@@ -363,9 +360,9 @@
   }
 }
 
-/* Adjust top padding when notification is visible */
+/* Remove old padding adjustment since we're using a full-screen overlay */
 @media (max-width: 768px) {
   .home-container.has-notification .content-wrapper {
-    padding-top: 80px;
+    display: none;
   }
 } 
