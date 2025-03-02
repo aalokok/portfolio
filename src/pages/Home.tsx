@@ -717,72 +717,86 @@ const Home: React.FC = () => {
     const isMobileDevice = window.innerWidth <= 768;
     setShowMobileNotification(isMobileDevice);
     
-    // Save to localStorage to remember dismissal between sessions
-    const hasSeenNotification = localStorage.getItem('hasSeenMobileNotification');
-    if (hasSeenNotification === 'true') {
+    // Always show for mobile, don't use localStorage anymore
+    if (isMobileDevice) {
+      setShowMobileNotification(true);
+      // Prevent scrolling on mobile
+      document.body.style.overflow = 'hidden';
+    } else {
       setShowMobileNotification(false);
+      document.body.style.overflow = 'auto';
     }
+    
+    // Cleanup
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
   }, []);
   
+  // Remove the dismiss functionality
   const dismissNotification = () => {
-    setShowMobileNotification(false);
-    localStorage.setItem('hasSeenMobileNotification', 'true');
+    // Do nothing - we want to keep the notification visible on mobile
   };
 
   return (
     <div className={`home-container ${showMobileNotification ? 'has-notification' : ''}`}>
-      {/* Mobile Notification Banner */}
+      {/* Mobile Development Notice */}
       {showMobileNotification && (
         <div className="mobile-notification">
-          <p>This website is optimized for desktop viewing. For the best experience, please visit on a computer.</p>
-          <button onClick={dismissNotification} className="dismiss-btn">Dismiss</button>
+          <p>Mobile version is currently under development. Please visit on desktop for the full experience.</p>
+          {/* Remove dismiss button since we want to block mobile access */}
         </div>
       )}
       
-      <canvas ref={canvasRef} className="liquid-canvas"></canvas>
-      
-      <div className="content-wrapper">
-        <section className="hero-section">
-          <div className="light-art-wrapper">
-            <LightArtBox />
-          </div>
-        </section>
-        
-        <section className="about-section">
-          <div className="about-container">
-            <div className="about-header">
-              <h2 className="section-title">About Me</h2>
-            </div>
-            <div className="about-content">
-              <div className="about-text">
-                <p>Aalok Sud is a multidisciplinary artist based in Montreal, operating at the intersection of computational arts, creative coding, and graphic design. His practice investigates digital mediums through a methodical approach that emphasizes clarity, precision, and impact. While specializing in web and graphic design, Aalok explores node-based workflows to develop adaptable and scalable visual systems that respond to evolving creative challenges.</p>
-                <p>Aalok's design philosophy navigates the tension between minimalism and focal complexity—where simplicity isn't the absence of detail but rather a deliberate method of control. He crafts experiences where strategic complexity creates moments of discovery within otherwise restrained compositions. Artistic impact drives his work, with functionality as its essential companion, resulting in tools and interfaces that are simultaneously expressive and utilitarian.</p>
-                <p>Aalok creates for those who recognize machines as more than mere tools—who understand their potential as platforms for creative exploration and expression. By interrogating the relationship between human intention and computational processes, his work reveals new possibilities at the boundaries of digital aesthetics.</p>
+      {/* Only render content if not on mobile */}
+      {!showMobileNotification && (
+        <>
+          <canvas ref={canvasRef} className="liquid-canvas"></canvas>
+          
+          <div className="content-wrapper">
+            <section className="hero-section">
+              <div className="light-art-wrapper">
+                <LightArtBox />
               </div>
-              <div className="about-skills">
-                <div className="skill-category">
-                  <h3>Design</h3>
-                  <ul>
-                    <li>UI/UX Design</li>
-                    <li>Visual Design</li>
-                    <li>Design Systems</li>
-                    <li>Prototyping</li>
-                  </ul>
+            </section>
+            
+            <section className="about-section">
+              <div className="about-container">
+                <div className="about-header">
+                  <h2 className="section-title">About Me</h2>
                 </div>
-                <div className="skill-category">
-                  <h3>Development</h3>
-                  <ul>
-                    <li>Frontend</li>
-                    <li>Creative Coding</li>
-                    <li>Interactive Media</li>
-                    <li>Web Animation</li>
-                  </ul>
+                <div className="about-content">
+                  <div className="about-text">
+                    <p>Aalok Sud is a multidisciplinary artist based in Montreal, operating at the intersection of computational arts, creative coding, and graphic design. His practice investigates digital mediums through a methodical approach that emphasizes clarity, precision, and impact. While specializing in web and graphic design, Aalok explores node-based workflows to develop adaptable and scalable visual systems that respond to evolving creative challenges.</p>
+                    <p>Aalok's design philosophy navigates the tension between minimalism and focal complexity—where simplicity isn't the absence of detail but rather a deliberate method of control. He crafts experiences where strategic complexity creates moments of discovery within otherwise restrained compositions. Artistic impact drives his work, with functionality as its essential companion, resulting in tools and interfaces that are simultaneously expressive and utilitarian.</p>
+                    <p>Aalok creates for those who recognize machines as more than mere tools—who understand their potential as platforms for creative exploration and expression. By interrogating the relationship between human intention and computational processes, his work reveals new possibilities at the boundaries of digital aesthetics.</p>
+                  </div>
+                  <div className="about-skills">
+                    <div className="skill-category">
+                      <h3>Design</h3>
+                      <ul>
+                        <li>UI/UX Design</li>
+                        <li>Visual Design</li>
+                        <li>Design Systems</li>
+                        <li>Prototyping</li>
+                      </ul>
+                    </div>
+                    <div className="skill-category">
+                      <h3>Development</h3>
+                      <ul>
+                        <li>Frontend</li>
+                        <li>Creative Coding</li>
+                        <li>Interactive Media</li>
+                        <li>Web Animation</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
-        </section>
-      </div>
+        </>
+      )}
     </div>
   );
 };

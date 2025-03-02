@@ -323,58 +323,43 @@
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  color: white;
-  padding: 16px;
+  height: 100vh; /* Full viewport height */
+  background-color: var(--color-darker);
+  color: var(--color-light);
+  padding: 32px;
   text-align: center;
-  z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  font-family: var(--font-body);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.light-mode .mobile-notification {
-  background-color: rgba(240, 240, 245, 0.85);
-  color: #000;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Ensure it's above everything */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-display);
 }
 
 .mobile-notification p {
   margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 80%;
+  font-weight: 500;
+  color: var(--color-gray-100);
 }
 
+/* Remove dismiss button styles since we're not using it anymore */
 .mobile-notification .dismiss-btn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 6px 12px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 0.8rem;
-  cursor: pointer;
+  display: none;
 }
 
-.light-mode .mobile-notification .dismiss-btn {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #000;
-}
-
-.mobile-notification .dismiss-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-.light-mode .mobile-notification .dismiss-btn:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-/* Only display on mobile devices */
+/* Always display on mobile devices */
 @media (max-width: 768px) {
   .mobile-notification {
-    display: block;
+    display: flex;
+  }
+  
+  /* Hide all content on mobile */
+  .home-container.has-notification .content-wrapper,
+  .home-container.has-notification .liquid-canvas {
+    display: none;
   }
 }
 

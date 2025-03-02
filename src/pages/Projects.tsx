@@ -117,7 +117,7 @@ const Projects: React.FC = () => {
         vid1,
         vid2
       ],
-      projectUrl: 'https://vimeo.com/example/leave-and-walk'
+      projectUrl: 'https://youtu.be/De4JYjZhpn8'
     },
     {
       id: 'fma',
@@ -140,8 +140,7 @@ const Projects: React.FC = () => {
         fma1,
         fma2
       ],
-      projectUrl: 'https://example.com/follow-me-around',
-      githubUrl: 'https://github.com/example/follow-me-around'
+      projectUrl: 'https://hybrid.concordia.ca/aa_sud/cart351/act1/',
     },
     {
       id: 'visuals',
@@ -191,8 +190,9 @@ const Projects: React.FC = () => {
         arkiv3,
         arkiv4
       ],
-      projectUrl: 'https://arkiv-project.herokuapp.com',
-      githubUrl: 'https://github.com/example/arkiv'
+      projectUrl: 'https://final351.onrender.com/',
+      githubUrl: 'https://github.com/aalokok/Final351'
+      
     },
     {
       id: 'soundmachine',
@@ -240,7 +240,7 @@ const Projects: React.FC = () => {
         bhag3,
         bhag4
       ],
-      projectUrl: 'https://behance.net/gallery/example/bhag'
+      projectUrl: 'https://drive.google.com/file/d/1ROAwFFTWPYDw1UwrNTfRixxP8PYfVRhk/view?usp=sharing'
     },
     {
       id: 'graphic-portfolio',
@@ -291,7 +291,7 @@ const Projects: React.FC = () => {
         sensesImg,
         sensesImg2
       ],
-      projectUrl: 'https://vimeo.com/example/senses'
+      projectUrl: 'https://youtu.be/Q60RFNze0yU'
     }
   ]);
   
