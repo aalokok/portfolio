@@ -503,8 +503,8 @@ const Projects: React.FC = () => {
       
       // Set image dimensions - all project images get the same size range now
       const maxWidth = isGifFile
-        ? randomIntFromInterval(320, 420) // Larger size for GIFs only
-        : randomIntFromInterval(200, 350); // Standard size range for all other images
+        ? randomIntFromInterval(260, 300) // Larger size for GIFs only
+        : randomIntFromInterval(200, 260); // Standard size range for all other images
       
       // Only set max-width, allowing images to maintain natural aspect ratio
       newImg.style.maxWidth = `${maxWidth}px`;
