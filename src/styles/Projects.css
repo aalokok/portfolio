@@ -8,11 +8,12 @@
 }
 
 .projects-container {
-  position: relative;
+  position: absolute;
   width: 100%;
-  min-height: 100vh;
-  padding-top: clamp(60px, 10vh, 80px); /* Responsive top padding */
-  overflow: visible;
+  min-height: 80vh;
+ 
+  padding-top: 0 px; /* Responsive top padding */
+  overflow: none;
   background-color: var(--color-bg);
   color: var(--color-text);
 }
